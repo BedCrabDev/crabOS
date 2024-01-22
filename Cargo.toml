@@ -7,3 +7,9 @@ edition = "2021"
 
 [dependencies]
 bootloader = "0.9.23"
+volatile = "0.2.7"
+spin = { version = "0.5.2", features = [] }
+
+[dependencies.lazy_static]
+version = "1.4.0"
+features = ["spin_no_std"]
