@@ -8,7 +8,7 @@ use alloc::rc::Rc;
 use alloc::vec;
 use alloc::vec::Vec;
 use core::panic::PanicInfo;
-use crab_os::{println, println_colored};
+use crab_os::{println, println_colored, print_colored, print};
 use crab_os::kernel::vga_buffer::{Color, ColorCode};
 extern crate alloc;
 
@@ -25,6 +25,7 @@ use crab_os::kernel::allocator;
 use crab_os::kernel::memory::BootInfoFrameAllocator;
 use crab_os::kernel::task::executor::Executor;
 use crab_os::kernel::task::Task;
+use raw_cpuid::CpuId;
 
 entry_point!(kernel_main);
 
@@ -33,10 +34,23 @@ entry_point!(kernel_main);
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
     use crab_os::kernel::memory;
     use x86_64::{VirtAddr};
-
-    println!("Initializing crabOS...");
+    print_colored!(ColorCode::new(Color::Yellow, Color::Black), "crabOS ");
+    println!("// version {}", env!("CARGO_PKG_VERSION"));
+    println!("");
     crab_os::init();
-    println!("Initialized!");
+    let cpuid = CpuId::new();
+    if let Some(vf) = cpuid.get_vendor_info() {
+        let vfstr = vf.as_str();
+        match vfstr {
+            "GenuineIntel" => print_colored!(ColorCode::new(Color::LightBlue, Color::Black), "Intel"),
+            "AuthenticAMD" => print_colored!(ColorCode::new(Color::LightRed, Color::Black), "AMD"),
+            _ => print_colored!(ColorCode::new(Color::LightGreen, Color::Black), "Unknown"),
+        }
+    }
+
+    print!(" // {}", cpuid.get_processor_brand_string().expect("Should be on both platforms").as_str());
+    println!("");
+    println!("");
 
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
     let mut mapper = unsafe { memory::init(phys_mem_offset) };

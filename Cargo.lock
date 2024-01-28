@@ -49,7 +49,7 @@ checksum = "654fb2472cc369d311c547103a1fa81d467bef370ae7a0680f65939895b1182a"
 
 [[package]]
 name = "crab_os"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "bootloader",
  "conquer-once",
@@ -59,6 +59,7 @@ dependencies = [
  "linked_list_allocator",
  "pc-keyboard",
  "pic8259",
+ "raw-cpuid",
  "spin",
  "volatile 0.2.7",
  "x86_64",
@@ -169,6 +170,15 @@ name = "pin-utils"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
+
+[[package]]
+name = "raw-cpuid"
+version = "11.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d86a7c4638d42c44551f4791a20e687dbb4c3de1f33c43dd71e355cd429def1"
+dependencies = [
+ "bitflags",
+]
 
 [[package]]
 name = "rustversion"
