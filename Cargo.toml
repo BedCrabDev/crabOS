@@ -6,9 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bootloader = "0.9.23"
+bootloader = { version = "0.9.23", features = ["map_physical_memory"]}
 volatile = "0.2.7"
 spin = { version = "0.5.2", features = [] }
+x86_64 = "0.14.11"
+pic8259 = "0.10.4"
+pc-keyboard = "0.5.1"
 
 [dependencies.lazy_static]
 version = "1.4.0"

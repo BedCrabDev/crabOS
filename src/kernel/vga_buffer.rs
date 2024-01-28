@@ -38,7 +38,7 @@ pub enum Color {
 pub struct ColorCode(u8);
 
 impl ColorCode {
-    pub(crate) fn new(foreground: Color, background: Color) -> ColorCode {
+    pub fn new(foreground: Color, background: Color) -> ColorCode {
         ColorCode((background as u8) << 4 | (foreground as u8))
     }
 }
@@ -130,39 +130,18 @@ impl fmt::Write for Writer {
     }
 }
 
-#[macro_export]
-macro_rules! print {
-    ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
-}
-
-#[macro_export]
-macro_rules! println {
-    () => ($crate::print!("\n"));
-    ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
-}
-
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
-    WRITER.lock().write_fmt(args).unwrap();
-}
+    use x86_64::instructions::interrupts;   // new
 
-// New macros to print with color
-#[macro_export]
-macro_rules! print_colored {
-    ($color:expr, $($arg:tt)*) => {{
-        $crate::vga_buffer::print_colored(format_args!($($arg)*), $color);
-    }};
-}
-
-#[macro_export]
-macro_rules! println_colored {
-    ($color:expr) => ($crate::print_colored!($color, "\n"));
-    ($color:expr, $($arg:tt)*) => ($crate::print_colored!($color, "{}\n", format_args!($($arg)*)));
+    interrupts::without_interrupts(|| {     // new
+        WRITER.lock().write_fmt(args).unwrap();
+    });
 }
 
 // Helper function to handle colored printing
-pub fn print_colored(args: fmt::Arguments, color: ColorCode) {
+pub fn _print_colored(args: fmt::Arguments, color: ColorCode) {
     use core::fmt::Write;
     let mut writer = WRITER.lock();
     let original_color = writer.color_code;
