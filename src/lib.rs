@@ -1,8 +1,10 @@
 #![no_std] // don't link the Rust standard library
 #![no_main] // disable all Rust-level entry point
 #![feature(abi_x86_interrupt)]
+#![feature(const_mut_refs)]
 
 pub mod kernel;
+extern crate alloc;
 
 pub fn init() {
     kernel::interrupts::init_idt();

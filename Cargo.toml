@@ -12,6 +12,21 @@ spin = { version = "0.5.2", features = [] }
 x86_64 = "0.14.11"
 pic8259 = "0.10.4"
 pc-keyboard = "0.5.1"
+linked_list_allocator = "0.9.1" # used as a fallback allocator if our own one fails
+
+[dependencies.crossbeam-queue]
+version = "0.2.3"
+default-features = false
+features = ["alloc"]
+
+[dependencies.conquer-once]
+version = "0.2.1"
+default-features = false
+
+[dependencies.futures-util]
+version = "0.3.4"
+default-features = false
+features = ["alloc"]
 
 [dependencies.lazy_static]
 version = "1.4.0"
